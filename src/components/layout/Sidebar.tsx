@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Home, PlayCircle, Trophy, Newspaper, Settings, Menu, LogOut } from "lucide-react";
+import { Home, PlayCircle, Trophy, Newspaper, Settings, Menu, LogOut, Users, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,8 @@ const menuItems = [
     { icon: PlayCircle, label: "Aulas", href: "/aulas" },
     { icon: Newspaper, label: "Notícias", href: "/noticias" },
     { icon: Trophy, label: "Conquistas", href: "/conquistas" },
+    { icon: Users, label: "Comunidade", href: "/comunidade" },
+    { icon: Briefcase, label: "Talentos", href: "/mercado" },
 ];
 
 export function Sidebar() {
