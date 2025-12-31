@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const menuItems = [
     { icon: Home, label: "Início", href: "/" },
-    { icon: PlayCircle, label: "Aulas", href: "/aulas" },
+    { icon: PlayCircle, label: "Treinamentos", href: "/aulas" },
     { icon: Newspaper, label: "Notícias", href: "/noticias" },
     { icon: Trophy, label: "Conquistas", href: "/conquistas" },
     { icon: Users, label: "Comunidade", href: "/comunidade" },
@@ -16,41 +16,43 @@ const menuItems = [
 ];
 
 export function Sidebar() {
-    const [isExpanded, setIsExpanded] = useState(true);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     return (
         <motion.aside
             initial={{ width: 80 }}
             animate={{ width: isExpanded ? 240 : 80 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="h-screen bg-card border-r border-border fixed left-0 top-0 z-50 flex flex-col justify-between py-6"
+            onMouseEnter={() => setIsExpanded(true)}
+            onMouseLeave={() => setIsExpanded(false)}
+            className="h-screen bg-card border-r border-border fixed left-0 top-0 z-50 flex flex-col justify-between py-6 shadow-2xl"
         >
             {/* Header / Logo Area */}
             <div className="px-4 mb-8 flex items-center justify-between">
-                <div className={cn("flex items-center gap-2 overflow-hidden", !isExpanded && "justify-center w-full")}>
-                    {/* Logo Placeholder */}
-                    <div className="w-8 h-8 rounded-lg bg-primary flex-shrink-0 flex items-center justify-center font-bold text-primary-foreground">
-                        AO
+                {/* Header / Logo Area */}
+                <div className="px-4 mb-8 flex items-center justify-between">
+                    <div className={cn("flex items-center gap-2 overflow-hidden transition-all duration-300",
+                        !isExpanded ? "justify-center w-full" : "justify-start"
+                    )}>
+                        {/* 
+                        Logo Logic:
+                        - Collapsed: We want to show just the 'Icon' (left part).
+                        - Expanded: Full logo.
+                    */}
+                        <div className={cn("relative transition-all duration-300 flex-shrink-0",
+                            isExpanded ? "w-32 h-10" : "w-10 h-10 overflow-hidden"
+                        )}>
+                            <img
+                                src="/logo.png"
+                                alt="Aioficina"
+                                className={cn("h-full object-contain transition-all duration-300",
+                                    isExpanded ? "w-full object-left" : "w-[300%] max-w-none object-left" // Zoom/Shift to show just the A when collapsed
+                                )}
+                            />
+                        </div>
                     </div>
-                    {isExpanded && (
-                        <motion.span
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="font-bold text-xl tracking-tight text-foreground whitespace-nowrap"
-                        >
-                            Aioficina
-                        </motion.span>
-                    )}
                 </div>
             </div>
-
-            {/* Toggle Button (Optional, can be removed if hover based) */}
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="absolute -right-3 top-8 bg-primary text-primary-foreground p-1 rounded-full shadow-lg hover:scale-110 transition-transform"
-            >
-                <Menu size={14} />
-            </button>
 
             {/* Menu Items */}
             <nav className="flex-1 px-2 space-y-2">
@@ -59,11 +61,11 @@ export function Sidebar() {
                         key={item.href}
                         href={item.href}
                         className={cn(
-                            "flex items-center gap-4 px-3 py-3 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors group",
+                            "flex items-center gap-4 px-3 py-3 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors group whitespace-nowrap overflow-hidden",
                             !isExpanded && "justify-center"
                         )}
                     >
-                        <item.icon size={24} className="group-hover:text-primary transition-colors" />
+                        <item.icon size={24} className="group-hover:text-primary transition-colors flex-shrink-0" />
                         {isExpanded && (
                             <motion.span
                                 initial={{ opacity: 0, x: -10 }}
@@ -82,20 +84,20 @@ export function Sidebar() {
                 <Link
                     href="/configuracoes"
                     className={cn(
-                        "flex items-center gap-4 px-3 py-3 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors",
+                        "flex items-center gap-4 px-3 py-3 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors whitespace-nowrap overflow-hidden",
                         !isExpanded && "justify-center"
                     )}
                 >
-                    <Settings size={24} />
+                    <Settings size={24} className="flex-shrink-0" />
                     {isExpanded && <span>Configurações</span>}
                 </Link>
                 <button
                     className={cn(
-                        "flex items-center gap-4 px-3 py-3 rounded-xl text-destructive hover:bg-destructive/10 transition-colors w-full",
+                        "flex items-center gap-4 px-3 py-3 rounded-xl text-destructive hover:bg-destructive/10 transition-colors w-full whitespace-nowrap overflow-hidden",
                         !isExpanded && "justify-center"
                     )}
                 >
-                    <LogOut size={24} />
+                    <LogOut size={24} className="flex-shrink-0" />
                     {isExpanded && <span>Sair</span>}
                 </button>
             </div>

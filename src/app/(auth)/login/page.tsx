@@ -37,6 +37,29 @@ export default function LoginPage() {
         router.refresh(); // Atualiza os componentes server-side
     };
 
+    const handleGoogleLogin = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/auth/callback`,
+                },
+            });
+
+            if (error) {
+                throw error;
+            }
+            // User will be redirected to Google, so we don't need to do anything else here
+        } catch (error) {
+            console.error("Error logging in with Google:", error);
+            setError("Erro ao conectar com Google. Tente novamente.");
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-black relative overflow-hidden">
             {/* Animated Background */}
@@ -57,9 +80,9 @@ export default function LoginPage() {
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.2 }}
-                            className="w-16 h-16 bg-gradient-to-tr from-primary to-purple-500 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-primary/20"
+                            className="flex justify-center mb-6"
                         >
-                            <Zap className="text-white fill-white" size={32} />
+                            <img src="/logo.png" alt="Aioficina" className="h-16 w-auto" />
                         </motion.div>
                         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
                             Bem-vindo de volta
@@ -127,18 +150,21 @@ export default function LoginPage() {
                         </button>
                     </form>
 
-                    <div className="mt-8 text-center" style={{ opacity: 0.5, pointerEvents: "none" }}>
-                        {/* Disabled Social Login for now */}
+                    <div className="mt-8 text-center">
                         <div className="relative mb-6">
                             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
                             <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Ou continue com</span></div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-sm font-medium">
+                            <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
                                 <Github size={18} /> Github
                             </button>
-                            <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-sm font-medium">
+                            <button
+                                onClick={handleGoogleLogin}
+                                disabled={isLoading}
+                                className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
                                 <span className="font-bold">G</span> Google
                             </button>
                         </div>
